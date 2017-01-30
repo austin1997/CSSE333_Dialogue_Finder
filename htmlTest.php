@@ -1,29 +1,29 @@
-<!DOCTYPE HTML >
+Ôªø<!DOCTYPE HTML >
 <html>
 <head>
-<p>hello</p>
+<p>hello</br></p>
 </head>
 <body>
 <p>
 <?php
 header("Content-type: text/html; charset=gb2312");
-$serverName = "137.112.104.37"; // ˝æ›ø‚∑˛ŒÒ∆˜µÿ÷∑
-$uid = "zhaiz"; // ˝æ›ø‚”√ªß√˚
-$pwd = "555888austin"; // ˝æ›ø‚√‹¬Î
+$serverName = "137.112.104.37"; //Êï∞ÊçÆÂ∫ìÊúçÂä°Âô®Âú∞ÂùÄ
+$uid = "zhaiz"; //Êï∞ÊçÆÂ∫ìÁî®Êà∑Âêç
+$pwd = "555888austin"; //Êï∞ÊçÆÂ∫ìÂØÜÁ†Å
 $connectionInfo = array("UID"=>$uid, "PWD"=>$pwd, "Database"=>"YFZZ");
 $conn = sqlsrv_connect( $serverName, $connectionInfo);
 if( $conn == false)
 {
-	echo "¡¨Ω” ß∞‹£°<br/>";
+	echo "ËøûÊé•Â§±Ë¥•ÔºÅ<br/>";
 	die( print_r( sqlsrv_errors(), true));
 }else{
-	echo "¡¨Ω”≥…π¶!";
+	echo "ËøûÊé•ÊàêÂäü!";
 }
 $query = sqlsrv_query($conn, "select * from Episode");
 while($row = sqlsrv_fetch_array($query))
 {
-	printf("%s\n",$row[3]);
-//	print_r($row);
+//	printf("%s\n",$row[3]);
+	print_r($row);
 }
 ?>
 

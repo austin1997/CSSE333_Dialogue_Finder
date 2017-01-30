@@ -1,7 +1,7 @@
-<?php
+ï»¿<?php
 header("Content-type: text/html; charset=utf-8");
-//¼ÙÈôÎÒÃÇ±¾µØµÄÎÄ¼þÊÇÒ»¸öÃûÎªxmlas.txtµÄÎÄ±¾
-$filedemo = "D:\Çà´º\[Kamigami] Yahari Ore no Seishun Love Come wa Machigatteiru [1920x1080 AVC FLAC]\[Kamigami] Yahari Ore no Seishun Love Come wa Machigatteiru 01 [1920x1080 AVC FLAC].ass";
+//å‡è‹¥æˆ‘ä»¬æœ¬åœ°çš„æ–‡ä»¶æ˜¯ä¸€ä¸ªåä¸ºxmlas.txtçš„æ–‡æœ¬
+$filedemo = iconv('utf-8','gbk',"D:\é’æ˜¥\[Kamigami] Yahari Ore no Seishun Love Come wa Machigatteiru [1920x1080 AVC FLAC]\[Kamigami] Yahari Ore no Seishun Love Come wa Machigatteiru 01 [1920x1080 AVC FLAC].ass");
 $fpdemo = fopen($filedemo,"r");
 if ($fpdemo){
 	while(!strstr(fgets($fpdemo), "-----Sub-JP---"));

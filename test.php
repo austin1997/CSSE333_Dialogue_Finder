@@ -15,6 +15,6 @@ if( $conn == false)
 $query = sqlsrv_query($conn, "select * from Episode");
 while($row = sqlsrv_fetch_array($query))
 {
-	print_r($row);
+  print_r($row);
 }
 ?>
