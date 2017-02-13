@@ -3,8 +3,12 @@
 <?php
 //	Open	a	connection	to	the	database	
 //	(display	an	error	if	the	connection	fails)	
-$conn = mysqli_connect('localhost',	'root',	'')	or die(mysqli_error());	
-mysqli_select_db($conn,	'rhitter')	or die(mysqli_error());	
+header("Content-type: text/html; charset=utf-8");
+$serverName = "137.112.104.37"; //数据库服务器地址
+$uid = "zhaiz"; //数据库用户名
+$pwd = "555888austin"; //数据库密砿
+$connectionInfo = array("UID"=>$uid, "PWD"=>$pwd, "Database"=>"YFZZ", "CharacterSet"=>"UTF-8");
+$conn = sqlsrv_connect( $serverName, $connectionInfo);
 ?>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -12,6 +16,11 @@ mysqli_select_db($conn,	'rhitter')	or die(mysqli_error());
 <title>Welcome!</title>
 </head>
 <body>
+<form action="" method="post">
+				<label for="id">ID</label><br/>
+				<input type="text" name="id"/><br/>
+				<input type="submit" value="Search"/>
+</form>
 <table class="table table-hover">
 			<thead>
 			<tr>
@@ -24,9 +33,8 @@ mysqli_select_db($conn,	'rhitter')	or die(mysqli_error());
 				<td>ID</td>
 				<td>Body</td>
 			</tr>
-			</tbody>
-	</table>
-<?php
+			
+			<?php
 	$id='0';	
 	if	($_SERVER['REQUEST_METHOD']	== 'POST')	{
 		$errors = '';
@@ -37,14 +45,14 @@ mysqli_select_db($conn,	'rhitter')	or die(mysqli_error());
 		}
 	}
 	if(!empty($id)){
-		echo 'id is: '.$id.'<br>';
-		$posts = mysqli_query($conn, "SELECT user_id, post_body". "FROM posts". "WHERE user_id=".$id."LIMIT 2");
-		echo 'posts are: '.$posts.'<br>';
+//		echo 'id is: '.$id.'<br>';
+		$posts = sqlsrv_query($conn, "SELECT Id, Episode_id, Content_CHN FROM Dialogue WHERE Id = $id");
+//		echo 'posts are: '.$posts.'<br>';
 		if (!($posts)) {
 			echo 'The anime you searched is not available';
 		}else{
-			while ($row = mysqli_fetch_array($posts))	{
-				echo '<table class="table table-hover"><tbody><tr><td>'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td></tr></tbody></table>';
+			while ($row = sqlsrv_fetch_array($posts))	{
+				echo '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td></tr>';
 			}
 		}
 	}else{
@@ -52,10 +60,10 @@ mysqli_select_db($conn,	'rhitter')	or die(mysqli_error());
 	}
 		
 ?>
-<form action="" method="post">
-				<label for="id">ID</label><br/>
-				<input type="text" name="id"/><br/>
-				<input type="submit" value="Search"/>
-</form>
+			
+			</tbody>
+	</table>
+
+
 </body>
 </html>
