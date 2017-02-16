@@ -56,14 +56,6 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 					<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
 					<label class="mdl-textfield__label" for="anime_input">Anime Name</label>
 					</div>
-					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-					<input class="mdl-textfield__input" type="text" id="anime_p_input" name="animePName">
-					<label class="mdl-textfield__label" for="anime_p_input">Company</label>
-					</div>
-					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-					<input class="mdl-textfield__input" type="text" id="anime_d_input" name="animeDName">
-					<label class="mdl-textfield__label" for="anime_d_input">Direcotr</label>
-					</div>
 				</form>
 				<form action="/index - Copy.php" style="float:left;padding-top:20px;padding-left:20px;">
 					<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Modify</button>
@@ -85,19 +77,23 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 					<?php
 						$animeName='';	
 						if	($_SERVER['REQUEST_METHOD']	== 'POST')	{
-							$errors = '';
-							$animeName = $_POST['animeName'];
-							if	(empty($animeName))	$errors .= '<li>The Name of Anime is required</li>';
-							if	(!empty($errors))	{	
-								echo '<ul>' . $errors . '</ul>';
+							if (isset($_POST['animeName'])) {
+								$animeName = $_POST['animeName'];
 							}
 						}
 						if(!empty($animeName)){
-							//echo 'Name is: '.$animeName.'<br>';
-							$posts = sqlsrv_query($conn, "SELECT Name, Publish_date, Produced_by, Directed_by FROM Anime");
-					//		echo 'posts are: '.$posts.'<br>';
+							$posts = sqlsrv_query($conn, "SELECT Name, Publish_date, Produced_by, Directed_by FROM Anime WHERE Name = N'$animeName'");
 							if (!($posts)) {
 								echo 'The anime you searched is not available';
+							}else{
+								while ($row = sqlsrv_fetch_array($posts))	{
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.date_format($row[1], 'd/m/y').'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
+								}
+							}
+						}else{
+							$posts = sqlsrv_query($conn, "SELECT Name, Publish_date, Produced_by, Directed_by FROM Anime");
+							if (!($posts)) {
+								
 							}else{
 								while ($row = sqlsrv_fetch_array($posts))	{
 									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.date_format($row[1], 'd/m/y').'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
@@ -114,40 +110,34 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 		<div class="page-content">
 			<form action="" method="post">
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
-				<label class="mdl-textfield__label" for="anime_input">Name of Anime</label>
+				<input class="mdl-textfield__input" type="text" id="episode_input" name="fromAnimeName">
+				<label class="mdl-textfield__label" for="episode_input">From which Anime</label>
 				</div>
 			</form>
 
 			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 				<thead>
 					<tr>
-						<th class="mdl-data-table__cell--non-numeric">Name</th>
-						<th>Date Released</th>
-						<th>Producer</th>
-						<th>Director</th>
+						<th class="mdl-data-table__cell--non-numeric">UniqueID</th>
+						<th>Anime</th>
+						<th>Number</th>
+						<th>Summary</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-						$animeName='';	
+						$fromAnimeName='';	
 						if	($_SERVER['REQUEST_METHOD']	== 'POST')	{
-							$errors = '';
-							$animeName = $_POST['animeName'];
-							if	(empty($animeName))	$errors .= '<li>The Name of Anime is required</li>';
-							if	(!empty($errors))	{	
-								echo '<ul>' . $errors . '</ul>';
-							}
+							$fromAnimeName = $_POST['fromAnimeName'];
 						}
-						if(!empty($animeName)){
-							echo 'Name is: '.$animeName.'<br>';
-							$posts = sqlsrv_query($conn, "SELECT Name, Publish_date, Produced_by, Directed_by FROM Anime");
+						if(!empty($fromAnimeName)){
+							$posts = sqlsrv_query($conn, "SELECT Id, from_Anime, Number, Summary FROM Episode WHERE from_Anime=N'$fromAnimeName'");
 					//		echo 'posts are: '.$posts.'<br>';
 							if (!($posts)) {
 								echo 'The anime you searched is not available';
 							}else{
 								while ($row = sqlsrv_fetch_array($posts))	{
-									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.date_format($row[1], 'd/m/y').'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
 								}
 							}
 						}
@@ -158,42 +148,36 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 	</section>
 	<section class="mdl-layout__tab-panel" id="fixed-tab-3">
 		<div class="page-content">
-			<form action="#fixed-tab-2" method="post">
+			<form action="" method="post">
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
-				<label class="mdl-textfield__label" for="anime_input">Name of Company</label>
+					<input class="mdl-textfield__input" type="text" id="dialog_input1" name="dialogEpisode">
+					<label class="mdl-textfield__label" for="dialog_input1">Episode Unique ID</label>
 				</div>
 			</form>
 
 			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 				<thead>
 					<tr>
-						<th class="mdl-data-table__cell--non-numeric">Name</th>
-						<th>Date Released</th>
-						<th>Producer</th>
-						<th>Director</th>
+						<th class="mdl-data-table__cell--non-numeric">Time</th>
+						<th>Content_CHN</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-						$animeName='';	
+						$dialogEpisode='0';
+						//$dialogKW='';	
 						if	($_SERVER['REQUEST_METHOD']	== 'POST')	{
-							$errors = '';
-							$animeName = $_POST['animeName'];
-							if	(empty($animeName))	$errors .= '<li>The Name of Anime is required</li>';
-							if	(!empty($errors))	{	
-								echo '<ul>' . $errors . '</ul>';
-							}
+							$dialogEpisode = $_POST['dialogEpisode'];
+							//$dialogKW=$_POST['dialogKW'];
 						}
-						if(!empty($animeName)){
-							echo 'Name is: '.$animeName.'<br>';
-							$posts = sqlsrv_query($conn, "SELECT Name, Publish_date, Produced_by, Directed_by FROM Anime WHERE Produced_by=N'$animeName'");
-					//		echo 'posts are: '.$posts.'<br>';
+						if(!empty($dialogEpisode)){
+							$posts = sqlsrv_query($conn, "SELECT Content_JP, Content_CHN FROM Dialogue WHERE Episode_id = 0");
+							echo 'posts are: '.$posts.'<br>';
 							if (!($posts)) {
-								echo 'The anime you searched is not available';
+								echo 'error';
 							}else{
 								while ($row = sqlsrv_fetch_array($posts))	{
-									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.date_format($row[1], 'd/m/y').'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.$row[1].'</td></tr>';
 								}
 							}
 						}
