@@ -72,7 +72,7 @@ header("Content-type: text/html; charset=utf-8");
 	
 	
 	?>
-		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" name = "insert" id="insert-btn">INSERT</button>
+		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" name = "insert" id="insert-btn" style="margin-left:700px;">INSERT</button>
 		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" name = "update" id="update-btn">UPDATE</button>
 		<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" name = "delete" id="delete-btn">DELETE</button>
     </form>
@@ -81,7 +81,7 @@ header("Content-type: text/html; charset=utf-8");
       $serverName = "137.112.104.37";
       $uid = $_COOKIE['uid'];
       $pwd = $_COOKIE['pwd'];
-	  echo "$uid </br>";
+	  //echo "$uid </br>";
       $connectionInfo = array("UID"=>$uid, "PWD"=>$pwd, "Database"=>"YFZZ", "CharacterSet"=>"UTF-8");
       $conn = sqlsrv_connect( $serverName, $connectionInfo);
 	  $Name='';	
@@ -117,8 +117,8 @@ header("Content-type: text/html; charset=utf-8");
 				$q = "DELETE FROM Anime WHERE Name = N'$Name'";
 				
 			}
-				echo "$q </br>";
-				$query = sqlsrv_query($conn, $q) or die(  print_r( sqlsrv_errors(), true));
+				//echo "$q </br>";
+				$query = sqlsrv_query($conn, $q) or die(  print "No Permission to modify");
 //		$query = sqlsrv_query($conn, "INSERT INTO Dialogue VALUES ( 0, 1, '0:00:02.22', N'"."$temp"."', NULL)");
 //				while($row = sqlsrv_fetch_array($query))
 //				{
@@ -128,7 +128,6 @@ header("Content-type: text/html; charset=utf-8");
 				echo '<p style="padding-top:20px;text-align:center;">Invalid username and/or password.</p>';
 			}
 		}else{
-		    echo '<p style="padding-top:50px;text-align:center;">Please use the visitor account<br>Username: user<br>Password: user</p>';
 	    }
     ?>
 

@@ -45,18 +45,12 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
             <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Anime</a>
             <a href="#fixed-tab-2" class="mdl-layout__tab">Episode</a>
             <a href="#fixed-tab-3" class="mdl-layout__tab">Dialogue</a>
-            <a href="#fixed-tab-4" class="mdl-layout__tab">Company</a>
+            <a href="#fixed-tab-4" class="mdl-layout__tab">Search</a>
         </div>
     </header>
     <main class="mdl-layout__content">
         <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
             <div class="page-content">
-				<form action="" method="post">
-					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-					<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
-					<label class="mdl-textfield__label" for="anime_input">Anime Name</label>
-					</div>
-				</form>
 				<form action="/index - Copy.php" style="float:left;padding-top:20px;padding-left:20px;">
 					<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Modify</button>
 					<?php
@@ -108,12 +102,6 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 		</section>
 	<section class="mdl-layout__tab-panel" id="fixed-tab-2">
 		<div class="page-content">
-			<form action="" method="post">
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" id="episode_input" name="fromAnimeName">
-				<label class="mdl-textfield__label" for="episode_input">From which Anime</label>
-				</div>
-			</form>
 
 			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 				<thead>
@@ -131,12 +119,22 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 							$fromAnimeName = $_POST['fromAnimeName'];
 						}
 						if(!empty($fromAnimeName)){
-							$posts = sqlsrv_query($conn, "SELECT Id, from_Anime, Number, Summary FROM Episode WHERE from_Anime=N'$fromAnimeName'");
-					//		echo 'posts are: '.$posts.'<br>';
-							if (!($posts)) {
+							$posts1 = sqlsrv_query($conn, "SELECT Id, from_Anime, Number, Summary FROM Episode WHERE from_Anime=N'$fromAnimeName'");
+					//		echo 'posts are: '.$posts1.'<br>';
+							if (!($posts1)) {
 								echo 'The anime you searched is not available';
 							}else{
-								while ($row = sqlsrv_fetch_array($posts))	{
+								while ($row = sqlsrv_fetch_array($posts1))	{
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
+								}
+							}
+						}else{
+							$posts1 = sqlsrv_query($conn, "SELECT Id, from_Anime, Number, Summary FROM Episode");
+					//		echo 'posts are: '.$posts1.'<br>';
+							if (!($posts1)) {
+								echo 'The anime you searched is not available';
+							}else{
+								while ($row = sqlsrv_fetch_array($posts1))	{
 									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.$row[1].'</td><td>'.$row[2].'</td><td>'.$row[3].'</td></tr>';
 								}
 							}
@@ -148,36 +146,54 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 	</section>
 	<section class="mdl-layout__tab-panel" id="fixed-tab-3">
 		<div class="page-content">
-			<form action="" method="post">
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="text" id="dialog_input1" name="dialogEpisode">
-					<label class="mdl-textfield__label" for="dialog_input1">Episode Unique ID</label>
-				</div>
-			</form>
 
 			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 				<thead>
 					<tr>
 						<th class="mdl-data-table__cell--non-numeric">Time</th>
+						<th>Content_JP</th>
 						<th>Content_CHN</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-						$dialogEpisode='0';
-						//$dialogKW='';	
+						$dialogEpisode='';
+						$dialogKW='';	
 						if	($_SERVER['REQUEST_METHOD']	== 'POST')	{
 							$dialogEpisode = $_POST['dialogEpisode'];
-							//$dialogKW=$_POST['dialogKW'];
+							$dialogKW=$_POST['dialogKW'];
+							echo $dialogKW;
 						}
 						if(!empty($dialogEpisode)){
-							$posts = sqlsrv_query($conn, "SELECT Content_JP, Content_CHN FROM Dialogue WHERE Episode_id = 0");
-							echo 'posts are: '.$posts.'<br>';
-							if (!($posts)) {
+							if(!empty($dialogKW)){
+								$posts2 = sqlsrv_query($conn, "SELECT Time, Content_JP, Content_CHN FROM Dialogue WHERE Episode_id = N'$dialogEpisode' AND Content_JP LIKE N'%$dialogKW%'");
+							//echo 'posts are: '.$posts.'<br>';
+							if (!($posts2)) {
 								echo 'error';
 							}else{
-								while ($row = sqlsrv_fetch_array($posts))	{
-									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.$row[0].'</td><td>'.$row[1].'</td></tr>';
+								while ($row = sqlsrv_fetch_array($posts2))	{
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.date_format($row[0], 'H:i:s').'</td><td>'.$row[1].'</td><td>'.$row[2].'</td></tr>';
+								}
+							}
+							}else{
+							$posts2 = sqlsrv_query($conn, "SELECT Time, Content_JP, Content_CHN FROM Dialogue WHERE Episode_id = N'$dialogEpisode'");
+							//echo 'posts are: '.$posts.'<br>';
+							if (!($posts2)) {
+								echo 'error';
+							}else{
+								while ($row = sqlsrv_fetch_array($posts2))	{
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.date_format($row[0], 'H:i:s').'</td><td>'.$row[1].'</td><td>'.$row[2].'</td></tr>';
+								}
+							}
+							}
+						}else{
+							$posts2 = sqlsrv_query($conn, "SELECT Time, Content_JP, Content_CHN FROM Dialogue");
+							//echo 'posts are: '.$posts.'<br>';
+							if (!($posts2)) {
+								echo 'error';
+							}else{
+								while ($row = sqlsrv_fetch_array($posts2))	{
+									echo '<tr><td class="mdl-data-table__cell--non-numeric">'.date_format($row[0], 'H:i:s').'</td><td>'.$row[1].'</td><td>'.$row[2].'</td></tr>';
 								}
 							}
 						}
@@ -189,35 +205,28 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
 	<section class="mdl-layout__tab-panel" id="fixed-tab-4">
 		<div class="page-content">
 			<form action="" method="post">
-				<div class="search mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-					<label class="mdl-button mdl-js-button mdl-button--icon" for="sample6">
-						<i class="material-icons">search</i>
-					</label>
-					<div class="mdl-textfield__expandable-holder">
-						<input class="mdl-textfield__input" type="text" id="sample6">
-						<label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
+					<label class="mdl-textfield__label" for="anime_input">Anime Name</label>
 					</div>
+				<br>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input class="mdl-textfield__input" type="text" id="episode_input" name="fromAnimeName">
+				<label class="mdl-textfield__label" for="episode_input">From which Anime</label>
 				</div>
+				<br>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="text" id="dialog_input" name="dialogEpisode">
+					<label class="mdl-textfield__label" for="dialog_input">Episode Unique ID</label>
+				</div>
+				<br>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<input class="mdl-textfield__input" type="text" id="dialog_input2" name="dialogKW">
+					<label class="mdl-textfield__label" for="dialog_input2">Key Words</label>
+				</div>
+				<br>
+				<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Search</button>
 			</form>
-
-			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-				<thead>
-					<tr>
-						<th class="mdl-data-table__cell--non-numeric">Name</th>
-						<th>Birthday</th>
-						<th>Gender</th>
-						<th>Info</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="mdl-data-table__cell--non-numeric">A director</td>
-						<td>01/01/2000</td>
-						<td>M</td>
-						<td>A's info</td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</section>
 </main>
