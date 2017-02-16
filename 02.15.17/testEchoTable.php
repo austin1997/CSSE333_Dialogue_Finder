@@ -52,19 +52,25 @@ $conn = sqlsrv_connect( $serverName, $connectionInfo);
         <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
             <div class="page-content">
 				<form action="" method="post">
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-				<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
-				<label class="mdl-textfield__label" for="anime_input">Anime Name</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-				<input class="mdl-textfield__input" type="text" id="anime_p_input" name="animePName">
-				<label class="mdl-textfield__label" for="anime_p_input">Company</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
-				<input class="mdl-textfield__input" type="text" id="anime_d_input" name="animeDName">
-				<label class="mdl-textfield__label" for="anime_d_input">Direcotr</label>
-				</div>
-			</form>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
+					<input class="mdl-textfield__input" type="text" id="anime_input" name="animeName">
+					<label class="mdl-textfield__label" for="anime_input">Anime Name</label>
+					</div>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
+					<input class="mdl-textfield__input" type="text" id="anime_p_input" name="animePName">
+					<label class="mdl-textfield__label" for="anime_p_input">Company</label>
+					</div>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right;">
+					<input class="mdl-textfield__input" type="text" id="anime_d_input" name="animeDName">
+					<label class="mdl-textfield__label" for="anime_d_input">Direcotr</label>
+					</div>
+				</form>
+				<form action="/index - Copy.php" style="float:left;padding-top:20px;padding-left:20px;">
+					<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Modify</button>
+					<?php
+						setcookie('changeTable','Anime');
+					?>
+				</form> 
 
 			<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 				<thead>
